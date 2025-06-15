@@ -3,54 +3,56 @@ const host = 'localhost'
 const port = 8000
 const express = require('express')
 const bodyParser = require('body-parser')
+const cors = require('cors')
+const db = require('./db')
 
 const app = express()
+app.use(cors())
 app.use(bodyParser.json())
 
-let tasks = []
-
-app.get('/tasks', (req, res) => {
-    res.json(tasks)
-})
-
-app.post('/tasks', (req, res) => {
-    const data = req.body
-
-    const newTask = {
-        id: tasks.length + 1,
-        task : data.task
+app.get('/tasks', async (req, res) => {
+    try {
+        const result = await db.query('SELECT * FROM tasks ORDER BY id')
+        res.json(result.rows)
     }
-
-    tasks.push(newTask)
-
-    res.status(201).json({message: 'Task created successfully', task: newTask})
+    catch (err) {
+        res.status(500).json({error : err.message})
+    }
 })
 
-app.put('/task/:id', (req, res) => {
+app.post('/tasks', async (req, res) => {
+    try {
+        const {task} = req.body
+        const result = await db.query('INSERT INTO tasks (task) VALUES ($1) RETURNING *', [task])
+        res.status(201).json(result.rows[0])
+
+    }
+    catch (err) {
+        res.status(500).json({error : err.message})
+    }
+})
+
+app.put('/tasks/:id', async (req, res) => {
+    try {
+        const id = parseInt(req.params.id)
+        const {task, done} = req.body
+        const result = await db.query('UPDATE tasks SET task = $1, done = $2 WHERE id = $3 RETURNING *', [task, done, id])
+        res.json(result.rows[0])
+    }
+    catch (err) {
+        res.status(500).json({error: err.message})
+    }
+})
+
+app.delete('/tasks/:id', async (req, res) => {
+  try {
     const id = parseInt(req.params.id)
-    const data = req.body
-
-    const taskToUpdate = tasks.find((task) => task.id === parseInt(id))
-    
-    if(!taskToUpdate) {
-        return res.status(404).json({message: 'Task not found'})
-    }
-
-    taskToUpdate.task = data.task || taskToUpdate.task
-
-    res.json({message: 'Task updated successfully', task: taskToUpdate})
-})
-
-app.delete('/task/:index', (req, res) => {
-    const index = parseInt(req.params.index)
-
-    if (index >= 0 && index < tasks.length) {
-        const deletedTask = tasks.splice(index, 1)[0]
-        res.json({ message: 'Task deleted successfully', task: deletedTask })
-    } 
-    else {
-        res.status(404).json({ error: 'Task not found' })
-    }
+    await db.query('DELETE FROM tasks WHERE id = $1', [id])
+    res.json({ message: 'Task deleted successfully' })
+  } 
+  catch (err) {
+    res.status(500).json({ error: err.message })
+  }
 })
 
 app.listen(port, () => {
