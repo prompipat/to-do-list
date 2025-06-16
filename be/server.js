@@ -1,6 +1,5 @@
 const http = require('http')
 const host = 'localhost'
-const port = 8000
 const express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
@@ -36,7 +35,8 @@ app.put('/tasks/:id', async (req, res) => {
     try {
         const id = parseInt(req.params.id)
         const {task, done} = req.body
-        const result = await db.query('UPDATE tasks SET task = $1, done = $2 WHERE id = $3 RETURNING *', [task, done, id])
+        const result = await db.query('UPDATE tasks SET task = COALESCE(NULLIF($1, \'\'), task), done = $2 WHERE id = $3 RETURNING *', 
+            [task, done, id])
         res.json(result.rows[0])
     }
     catch (err) {
@@ -55,6 +55,6 @@ app.delete('/tasks/:id', async (req, res) => {
   }
 })
 
-app.listen(port, () => {
-    console.log(`server is running on ${host}:${port}`)
+app.listen(8000, () => {
+    console.log(`server is running on http://${host}:8000`)
 })

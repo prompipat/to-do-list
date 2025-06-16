@@ -1,0 +1,94 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  margin: 0;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  width: 100%;
+  max-width: 600px;
+}
+
+.container input {
+  flex: 1;
+  padding: 0.75rem 1.5rem;
+  border-radius: 2rem;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  outline: none;
+  transition: border 0.2s;
+}
+
+.container input:focus {
+  border-color: #469fff;
+}
+
+button.add {
+  padding: 0.75rem 1.5rem;
+  border-radius: 2rem;
+  border: none;
+  background-color: #a3cfff;
+  color: white;
+  font-size: 1.25rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+button.add:hover {
+  background-color: #2b89ee;
+}
+
+#tasklist {
+  list-style: none;
+  padding: 0;
+  width: 100%;
+  max-width: 600px;
+}
+
+#tasklist li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: white;
+  border: 1px solid #ddd;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  margin-bottom: 0.5rem;
+  transition: background-color 0.2s;
+}
+
+#tasklist li span {
+  flex-grow: 1;
+  font-size: 1rem;
+}
+
+#tasklist li span.done {
+  text-decoration: line-through;
+  color: rgb(99, 99, 99);
+}
+
+#tasklist button {
+  background-color: transparent;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  margin-left: 0.5rem;
+}
+
+#tasklist button:hover {
+  opacity: 0.8;
+}
