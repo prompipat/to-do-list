@@ -1,4 +1,3 @@
-const http = require('http')
 const host = 'localhost'
 const express = require('express')
 const bodyParser = require('body-parser')
