@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./be
+    container_name: todo-backend
+    ports:
+      - "8000:8000"  #port host : port container
+    env_file:
+      - ./be/.env
+    depends_on:
+      - db
+  
+  frontend:
+    build: ./fe
+    container_name: todo-frontend
+    ports:
+      - "3000:80"  #ผูกพอร์ต 80 ของ nginx (ใน container) ออกมา
+    depends_on:
+      - backend
+
+  db:
+    image: postgres:15
+    container_name: todo-postgres
+    ports:
+      - "5432:5432"
+    env_file:
+      - ./db.env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
