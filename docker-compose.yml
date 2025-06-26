@@ -25,7 +25,7 @@ services:
     ports:
       - "5432:5432"
     env_file:
-      - ./db.env
+      - /home/prompipat18348/secrets/db.env
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
