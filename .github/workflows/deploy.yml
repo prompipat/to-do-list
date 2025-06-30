@@ -22,7 +22,8 @@ jobs:
 
       - name: Deploy to VPS via SSH
         run: |
-          ssh ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} << 'EOF'
+          ssh ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} <<EOF
+            set -e
             cd to-do-list
 
             echo "🔄 Pull latest code"

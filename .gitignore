@@ -1,3 +1,4 @@
 node_modules/
 *.env
-
+ci_cd_key
+ci_cd_key.pub
