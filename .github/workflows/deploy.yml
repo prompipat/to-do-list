@@ -1,0 +1,48 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.VPS_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Deploy to VPS via SSH
+        run: |
+          ssh ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} << 'EOF'
+            cd to-do-list
+
+            echo "🔄 Pull latest code"
+            git pull origin main
+
+            echo "🔐 Recreate .env and db.env"
+            echo "PGHOST=db" > be/.env
+            echo "PGUSER=postgres" >> be/.env
+            echo "PGDATABASE=tododb" >> be/.env
+            echo "PGPASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> be/.env
+            echo "PGPORT=5432" >> be/.env
+
+            mkdir -p secrets
+            echo "PGHOST=db" > secrets/db.env
+            echo "POSTGRES_USER=postgres" >> secrets/db.env
+            echo "POSTGRES_DB=tododb" >> secrets/db.env
+            echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> secrets/db.env
+            echo "PGPORT=5432" >> secrets/db.env
+
+            echo "🚀 Rebuild containers"
+            docker compose down
+            docker compose up -d --build
+          EOF
