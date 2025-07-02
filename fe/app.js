@@ -1,9 +1,9 @@
 let input = document.getElementById('input')
 let taskList = document.getElementById('tasklist')
 
-const BASE_URL = 'http://34.41.136.128:8000'
+const BASE_URL = 'http://146.148.109.135:8000'
 
-async function addTask() {
+async function addTask() {sudo
     let taskText = input.value.trim()
 
     if (taskText === '') return
