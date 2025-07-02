@@ -3,7 +3,7 @@ let taskList = document.getElementById('tasklist')
 
 const BASE_URL = 'http://34.61.173.36:8000'
 
-async function addTask() {sudo
+async function addTask() {
     let taskText = input.value.trim()
 
     if (taskText === '') return
