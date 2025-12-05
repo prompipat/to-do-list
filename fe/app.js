@@ -1,7 +1,7 @@
 let input = document.getElementById('input')
 let taskList = document.getElementById('tasklist')
 
-const BASE_URL = 'http://34.61.173.36:8000'
+const BASE_URL = 'http://34.61.173.36:8000'   //gcp IP address
 
 async function addTask() {
     let taskText = input.value.trim()
